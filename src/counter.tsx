@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 
-// Counter props 정의할 경우
-// type CounterProps = {
-// }
+// action type 정의(typescript를 사용할 경우)
+type Action = { type: 'INCREASE' } | { type: 'DECREASE' };
+
+function reducer(state: number, action: Action): number {
+  switch (action.type) {
+    case 'INCREASE':
+      return state + 1;
+    case 'DECREASE':
+      return state - 1;
+    default:
+      throw new Error('Unhandled action type');
+  }
+}
+
 function Counter() {
-  const [count, setCount] = useState(0); // 제네릭<number>를 선언해도 되지만 생략가능, 자동적으로 number 선언
+  const [count, dispatch] = useReducer(reducer, 0); // 제네릭<number>를 선언해도 되지만 생략가능, 자동적으로 number 선언
 
-  const onIncrease = () => {
-    setCount(count + 1); // typescript 사용으로 count가 number형인 것을 알게됨
-  }
-
-  const onDecrease = () => {
-    setCount(count - 1);
-  }
+  const onIncrease = () => dispatch({ type: 'INCREASE' });
+  const onDecrease = () => dispatch({ type: 'DECREASE' });
 
   return (
     <div>
@@ -22,8 +28,8 @@ function Counter() {
         <button onClick={onDecrease}>-1</button>
       </div>
     </div>
-  )
+  );
 }
 
 export default Counter;
-// JS와 차이점이라고 한다면 확장자가 .tsx인 것 
+// JS와 차이점이라고 한다면 확장자가 .tsx인 것
